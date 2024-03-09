@@ -1,0 +1,54 @@
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Step 1: Data Collection
+# Assume df is your historical transaction DataFrame with relevant features
+# Replace 'your_dataset.csv' with the actual dataset file or database connection
+# df = pd.read_csv('your_dataset.csv')
+
+# For this example, let's create a synthetic dataset
+data = {'Amount': [100, 200, 150, 300, 120, 250, 180, 400],
+        'Timestamp': [1, 2, 3, 4, 5, 6, 7, 8],
+        'Fraudulent': [0, 0, 0, 1, 0, 1, 0, 1]}
+
+df = pd.DataFrame(data)
+
+# Step 2: Data Preprocessing
+# Handle missing values and balance the dataset if needed
+
+# Step 3: Feature Engineering (Assume no additional feature engineering for simplicity)
+
+# Step 4: Exploratory Data Analysis (EDA) - Visualization
+
+# Step 5: Model Selection
+# Split data into features (X) and target variable (y)
+X = df.drop('Fraudulent', axis=1)
+y = df['Fraudulent']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Choose a classification algorithm (Random Forest in this example)
+model = RandomForestClassifier()
+
+# Step 6: Model Training
+model.fit(X_train, y_train)
+
+# Step 7: Model Evaluation
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+# Print evaluation metrics
+print(f"Accuracy: {accuracy:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+print(f"F1 Score: {f1:.2f}")
