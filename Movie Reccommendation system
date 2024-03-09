@@ -1,0 +1,35 @@
+# Import necessary libraries
+import pandas as pd
+from surprise import Dataset, Reader, KNNBasic
+from flask import Flask, request, render_template
+
+# Load your movie ratings data into a DataFrame (replace 'your_data.csv' with your actual file)
+ratings_data = pd.read_csv('your_data.csv')
+
+# Create a surprise dataset from the DataFrame
+reader = Reader(rating_scale=(1, 5))
+data = Dataset.load_from_df(ratings_data[['user_id', 'movie_id', 'rating']], reader)
+
+# Build a user-based collaborative filtering model
+trainset = data.build_full_trainset()
+sim_options = {'name': 'cosine', 'user_based': True}
+model = KNNBasic(sim_options=sim_options)
+model.fit(trainset)
+
+# Flask web application
+app = Flask(_name_)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    user_id = int(request.form['user_id'])
+    # Get movie recommendations for the specified user
+    recommendations = model.get_neighbors(user_id, k=5)
+    recommended_movies = ratings_data[ratings_data['movie_id'].isin(recommendations)]['movie_title'].unique()
+    return render_template('recommendations.html', user_id=user_id, recommended_movies=recommended_movies)
+
+if _name_ == '_main_':
+    app.run(debug=True)
